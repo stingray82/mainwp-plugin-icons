@@ -37,7 +37,7 @@ If you're adding `wordfence.png`:
 ## ✅ Requirements
 
 - **Naming:** Use lowercase plugin slugs only (no spaces or special characters)
-- **Format:** `.png` only
+- **Format:** `.jpeg, jpg, gif, ico, png` only
 - **Size:** 64x64 or 128x128 recommended (square)
 
 ---
