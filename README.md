@@ -20,20 +20,33 @@ Replace `yourusername` with your actual GitHub username or organization name.
 ### Example PHP Integration
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ php
-add_filter('mainwp_before_save_cached_icons', function($cached_icons, $icon, $slug, $type, $custom_icon, $noexp) {
+add_filter('mainwp_before_save_cached_icons', function ($cached_icons, $icon, $slug, $type, $custom_icon, $noexp) {
     $json_url = 'https://raw.githubusercontent.com/stingray82/mainwp-plugin-icons/main/icons-map.json';
-    $json_data = @file_get_contents($json_url);
-    if (!$json_data) return $cached_icons;
+    $response = wp_remote_get($json_url);
 
-    $icon_map = json_decode($json_data, true);
-    if (!is_array($icon_map)) return $cached_icons;
+    if (is_wp_error($response)) {
+        return $cached_icons;
+    }
 
-    if (isset($icon_map[$slug])) {
-        $cached_icons[$slug] = $icon_map[$slug];
+    $icons_map = json_decode(wp_remote_retrieve_body($response), true);
+    if (!is_array($icons_map)) {
+        return $cached_icons;
+    }
+
+    foreach ($icons_map as $custom_slug => $custom_icon_url) {
+        if (!isset($cached_icons[$custom_slug])) {
+            $cached_icons[$custom_slug] = [
+                'lasttime_cached' => time(),
+                'path_custom'     => '',
+                'path'            => urlencode($custom_icon_url),
+            ];
+            
+        }
     }
 
     return $cached_icons;
 }, 10, 6);
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Repository Structure
