@@ -98,3 +98,8 @@ submitting icons for your favorite plugins. See
 [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines.
 
 
+Build.bat & Build.php
+------------
+These new additionals allow you to quickly and easily automatically build your json based on properly named files in the two applicable folders
+
+
